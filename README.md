@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BIM760 Project README
 
-## Getting Started
+## Overview
 
-First, run the development server:
+BIM760 is the customer app website for an insurance company, built as a full-stack Next.js 16 application. It starts with static, SEO-optimized product detail pages (PDPs) for 10+ insurance products, evolving to include user accounts, insurance reminders, chatbots (with AI suggestions), and an admin panel for content management, SMS campaigns (queues), WhatsApp interfaces, and a simple CMS.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Core Goals:**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Rapid MVP for time-to-market.
+- SEO-first: SSG for PDPs via MDX + Contentlayer.
+- Secure: Server actions/API routes for backend logic.
+- Scalable: Monolith now, microservices/Python FastAPI later if needed.
+- Deployed via Docker Compose on VPS.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Currently in informative phase—no payments or full user logins yet. Future: Full digitization (quotes, billing, policy storage).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Next.js 16 Highlights Used:**
 
-## Learn More
+- Turbopack: Default for dev/build (2-5x faster).
+- Cache Components: `"use cache"` for dynamic islands in static PDPs.
+- proxy.ts: Replaces middleware for auth/routing.
+- React 19.2: View Transitions, useEffectEvent for smoother UX.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+BIM760/
+├── app/ # Next.js App Router: pages, layouts, API routes
+│ ├── (customer)/ # Public routes: home, /products/[slug]
+│ ├── (admin)/ # Protected: dashboard, CMS, queue management
+│ ├── api/ # Backend routes: /api/auth, /api/sms, /api/ai-suggest
+│ ├── globals.css # Tailwind setup
+│ └── layout.tsx # Root layout with providers
+├── components/ # Reusable UI: Hero, CoverageTable, ChatbotEmbed
+│ ├── ui/ # shadcn components
+│ └── admin/ # Admin-specific
+├── content/ # MDX for PDPs: /products/car-insurance.mdx
+├── db/ # Drizzle: schema.ts, index.ts (queries), migrations/
+├── lib/ # Utilities: auth.ts, db.ts, openai.ts
+├── agent-docs/ # For LLM agent: tasks/, solutions/, api.schema.ts
+├── public/ # Static assets: images, icons
+├── docker-compose.yml # Services: nextjs, postgres, (redis)
+├── next.config.js # Config: images, env, Turbopack
+├── drizzle.config.ts # DB migrations
+├── package.json # Deps: next@16, drizzle-orm, @next-auth/next-auth, etc.
+├── tailwind.config.js # Theme: insurance colors (blues, greens)
+└── README.md # This file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Key Folders Explained:**
 
-## Deploy on Vercel
+- `/app`: All routes. Use `(group)` for parallel routes (e.g., customer vs admin).
+- `/db`: Centralized DB logic. Queries are pure functions.
+- `/lib`: Helpers (e.g., formatPrice, sendSMS). No business logic here.
+- `/content`: MDX files processed by Contentlayer for SSG PDPs.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Getting Started (Local Dev)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Prerequisites:**
+
+   - Node.js 20.9+ (LTS).
+   - Docker (for Postgres).
+   - PostgreSQL 16+ (via Docker).
+
+2. **Setup:**
+
+   ```bash
+   # Clone & Install
+   git clone <repo> && cd BIM760
+   npm install
+
+   # DB Setup
+   npx drizzle-kit generate:pg  # From schema.ts
+   docker-compose up -d postgres  # Start DB
+   npx drizzle-kit push:pg        # Apply migrations
+
+   # Env Vars (copy .env.example)
+   cp .env.example .env
+   # Add: DATABASE_URL, NEXTAUTH_SECRET, OPENAI_API_KEY, TWILIO_SID, etc.
+
+   # Dev Server
+   npm run dev  # Turbopack auto-enabled
+   Build & Deploy:
+   Bash
+   npm run build  # Turbopack
+   docker-compose up  # Full stack
+   ```
