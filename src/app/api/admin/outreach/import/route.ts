@@ -26,15 +26,25 @@ function mapColumns(row: any): {
 } {
   // Map common column names
   const mappings: { [key: string]: string } = {
+    // firstName
     نام: "firstName",
+    اسم: "firstName",
+    name: "firstName",
     firstName: "firstName",
     first_name: "firstName",
+    // lastName
     "نام خانوادگی": "lastName",
+    فامیلی: "lastName",
+    surname: "lastName",
     lastName: "lastName",
     last_name: "lastName",
+    // phone
     تلفن: "phone",
+    شماره: "phone",
     phone: "phone",
     "شماره تلفن": "phone",
+    phone_number: "phone",
+    // insuranceType
     "نوع بیمه": "insuranceType",
     insuranceType: "insuranceType",
     insurance_type: "insuranceType",
