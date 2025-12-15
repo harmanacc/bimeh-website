@@ -72,10 +72,9 @@ export const outreachTypeEnum = pgEnum("outreach_type", [
 
 export const productsTable = pgTable("products", {
   id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 255 }).unique().notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
   type: productTypeEnum("type").notNull(),
+  description: text("description"),
   coveragePoints: text("coverage_points"), // Stored as JSON string
   premiumStart: decimal("premium_start", { precision: 10, scale: 2 }),
   premiumEnd: decimal("premium_end", { precision: 10, scale: 2 }),
@@ -125,7 +124,7 @@ export const leadsTable = pgTable("leads", {
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
   phone: varchar("phone", { length: 20 }).unique().notNull(), // Normalized international format
-  insuranceType: text("insurance_type"),
+  productId: integer("product_id").references(() => productsTable.id),
   source: varchar("source", { length: 255 }), // e.g., Excel filename or campaign
   importedBy: varchar("imported_by", { length: 255 }),
   ...timestamps,

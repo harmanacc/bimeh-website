@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +18,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface LeadData {
   [key: string]: string;
@@ -48,11 +55,18 @@ const columnMappings: { [key: string]: string } = {
   phone: "phone",
   "شماره تلفن": "phone",
   phone_number: "phone",
-  // insuranceType
-  "نوع بیمه": "insuranceType",
-  insuranceType: "insuranceType",
-  insurance_type: "insuranceType",
+  // productName
+  "نوع بیمه": "productName",
+  insuranceType: "productName",
+  insurance_type: "productName",
+  product: "productName",
+  محصول: "productName",
 };
+
+interface Product {
+  id: number;
+  name: string;
+}
 
 export default function LeadPreviewTable({
   data,
@@ -61,6 +75,22 @@ export default function LeadPreviewTable({
 }: LeadPreviewTableProps) {
   const [localData, setLocalData] = useState(data);
   const [localColumns, setLocalColumns] = useState(columns);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/admin/products");
+        if (response.ok) {
+          const data = await response.json();
+          setProducts(data.products || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleCellChange = (
     rowIndex: number,
@@ -173,13 +203,37 @@ export default function LeadPreviewTable({
                 <TableRow key={rowIndex}>
                   {localColumns.map((col) => (
                     <TableCell key={col}>
-                      <Input
-                        value={row[col] || ""}
-                        onChange={(e) =>
-                          handleCellChange(rowIndex, col, e.target.value)
-                        }
-                        className="h-8"
-                      />
+                      {columnMappings[col] === "productName" ? (
+                        <Select
+                          value={row[col] || "none"}
+                          onValueChange={(value) =>
+                            handleCellChange(
+                              rowIndex,
+                              col,
+                              value === "none" ? "" : value
+                            )
+                          }
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue placeholder="انتخاب محصول" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {products.map((product) => (
+                              <SelectItem key={product.id} value={product.name}>
+                                {product.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          value={row[col] || ""}
+                          onChange={(e) =>
+                            handleCellChange(rowIndex, col, e.target.value)
+                          }
+                          className="h-8"
+                        />
+                      )}
                     </TableCell>
                   ))}
                   <TableCell>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { read, utils } from "xlsx";
 import { db } from "@/db";
-import { leadsTable } from "@/db/schema";
+import { leadsTable, productsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 function normalizePhone(phone: string): string {
@@ -22,7 +22,7 @@ function mapColumns(row: any): {
   firstName: string;
   lastName: string;
   phone: string;
-  insuranceType?: string;
+  productName?: string;
 } {
   // Map common column names
   const mappings: { [key: string]: string } = {
@@ -44,10 +44,12 @@ function mapColumns(row: any): {
     phone: "phone",
     "شماره تلفن": "phone",
     phone_number: "phone",
-    // insuranceType
-    "نوع بیمه": "insuranceType",
-    insuranceType: "insuranceType",
-    insurance_type: "insuranceType",
+    // productName
+    "نوع بیمه": "productName",
+    insuranceType: "productName",
+    insurance_type: "productName",
+    product: "productName",
+    محصول: "productName",
   };
 
   const mapped: any = {};
@@ -61,7 +63,7 @@ function mapColumns(row: any): {
     firstName: mapped.firstName || "",
     lastName: mapped.lastName || "",
     phone: mapped.phone || "",
-    insuranceType: mapped.insuranceType,
+    productName: mapped.productName,
   };
 }
 
@@ -116,6 +118,9 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
+    // Fetch all products for matching
+    const products = await db.select().from(productsTable);
+
     const validLeads = [];
     const errors = [];
 
@@ -138,11 +143,22 @@ export async function PUT(request: NextRequest) {
           continue;
         }
 
+        // Find product by name
+        let productId = null;
+        if (mappedLead.productName) {
+          const product = products.find(
+            (p) => p.name === mappedLead.productName
+          );
+          if (product) {
+            productId = product.id;
+          }
+        }
+
         validLeads.push({
           firstName: mappedLead.firstName,
           lastName: mappedLead.lastName,
           phone: normalizedPhone,
-          insuranceType: mappedLead.insuranceType,
+          productId,
           source: "Excel import",
           importedBy: "admin", // TODO: get from session
         });
