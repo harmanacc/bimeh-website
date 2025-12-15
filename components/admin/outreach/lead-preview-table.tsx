@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Minus, Trash2 } from "lucide-react";
+import { Plus, Minus, Trash2, Check, CheckSquare, X } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -76,6 +76,7 @@ export default function LeadPreviewTable({
   const [localData, setLocalData] = useState(data);
   const [localColumns, setLocalColumns] = useState(columns);
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -148,6 +149,42 @@ export default function LeadPreviewTable({
     return `نام‌های معتبر: ${examples.join(", ")}`;
   };
 
+  const handleRowSelect = (rowIndex: number, checked: boolean) => {
+    const newSelected = new Set(selectedRows);
+    if (checked) {
+      newSelected.add(rowIndex);
+    } else {
+      newSelected.delete(rowIndex);
+    }
+    setSelectedRows(newSelected);
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedRows(new Set(localData.map((_, i) => i)));
+    } else {
+      setSelectedRows(new Set());
+    }
+  };
+
+  const handleBulkApplyProduct = (productName: string) => {
+    if (selectedRows.size === 0) return;
+    const productColumn = localColumns.find(
+      (col) => columnMappings[col] === "productName"
+    );
+    if (!productColumn) return;
+    const newData = [...localData];
+    selectedRows.forEach((rowIndex) => {
+      newData[rowIndex] = {
+        ...newData[rowIndex],
+        [productColumn]: productName,
+      };
+    });
+    setLocalData(newData);
+    onDataChange(newData);
+    setSelectedRows(new Set());
+  };
+
   return (
     <TooltipProvider>
       <div className="space-y-4">
@@ -165,6 +202,21 @@ export default function LeadPreviewTable({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      handleSelectAll(selectedRows.size !== localData.length)
+                    }
+                    className="h-8 w-8 p-0"
+                  >
+                    {selectedRows.size === localData.length &&
+                      localData.length > 0 && (
+                        <CheckSquare className="h-4 w-4" />
+                      )}
+                  </Button>
+                </TableHead>
                 {localColumns.map((col, colIndex) => (
                   <TableHead key={col} className="text-right">
                     <div className="flex items-center justify-between">
@@ -201,30 +253,57 @@ export default function LeadPreviewTable({
             <TableBody>
               {localData.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
+                  <TableCell>
+                    <Button
+                      variant={selectedRows.has(rowIndex) ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() =>
+                        handleRowSelect(rowIndex, !selectedRows.has(rowIndex))
+                      }
+                      className="h-8 w-8 p-0"
+                    >
+                      {selectedRows.has(rowIndex) && (
+                        <Check className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </TableCell>
                   {localColumns.map((col) => (
                     <TableCell key={col}>
                       {columnMappings[col] === "productName" ? (
-                        <Select
-                          value={row[col] || "none"}
-                          onValueChange={(value) =>
-                            handleCellChange(
-                              rowIndex,
-                              col,
-                              value === "none" ? "" : value
-                            )
-                          }
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue placeholder="انتخاب محصول" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {products.map((product) => (
-                              <SelectItem key={product.id} value={product.name}>
-                                {product.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex items-center gap-2">
+                          <Select
+                            value={row[col] || "none"}
+                            onValueChange={(value) =>
+                              handleCellChange(
+                                rowIndex,
+                                col,
+                                value === "none" ? "" : value
+                              )
+                            }
+                          >
+                            <SelectTrigger className="h-8 flex-1">
+                              <SelectValue placeholder="انتخاب محصول" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {products.map((product) => (
+                                <SelectItem
+                                  key={product.id}
+                                  value={product.name}
+                                >
+                                  {product.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            onClick={() => handleCellChange(rowIndex, col, "")}
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 w-8 p-0"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
                       ) : (
                         <Input
                           value={row[col] || ""}
@@ -250,6 +329,42 @@ export default function LeadPreviewTable({
               ))}
             </TableBody>
           </Table>
+        </div>
+        <div className="flex items-center gap-4 mt-4 p-4 border rounded-md bg-muted/50">
+          <span className="text-sm font-medium">
+            انتخاب شده: {selectedRows.size} ردیف
+          </span>
+          <Select
+            onValueChange={handleBulkApplyProduct}
+            disabled={selectedRows.size === 0}
+          >
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="انتخاب محصول برای اعمال" />
+            </SelectTrigger>
+            <SelectContent>
+              {products.map((product) => (
+                <SelectItem key={product.id} value={product.name}>
+                  {product.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            onClick={() => handleBulkApplyProduct("")}
+            disabled={selectedRows.size === 0}
+            size="sm"
+            variant="outline"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          <Button
+            onClick={() => setSelectedRows(new Set())}
+            disabled={selectedRows.size === 0}
+            size="sm"
+            variant="outline"
+          >
+            پاک کردن انتخاب
+          </Button>
         </div>
       </div>
     </TooltipProvider>
