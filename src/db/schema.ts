@@ -78,6 +78,7 @@ export const productsTable = pgTable("products", {
   coveragePoints: text("coverage_points"), // Stored as JSON string
   premiumStart: decimal("premium_start", { precision: 10, scale: 2 }),
   premiumEnd: decimal("premium_end", { precision: 10, scale: 2 }),
+  keywords: text("keywords"), // Comma-separated keywords for XLSX matching
   isActive: boolean("is_active").default(true),
   ...timestamps,
 });

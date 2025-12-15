@@ -15,6 +15,13 @@
       "when": 1765826885082,
       "tag": "0001_known_luke_cage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1765831353417,
+      "tag": "0002_lame_jubilee",
+      "breakpoints": true
     }
   ]
 }
