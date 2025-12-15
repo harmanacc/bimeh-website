@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 const navigationItems = [
   { name: "آپلود لیدها", href: "/admin/upload-leads", icon: Upload },
@@ -32,6 +33,20 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 bg-white h-full p-4 border-r border-gray-200 flex flex-col">
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-black">BIM760</h1>
+      </div>
+      <div className="mb-4">
+        <Link
+          href="/admin"
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-100 text-black"
+          )}
+        >
+          <span>داشبورد</span>
+        </Link>
+      </div>
+      <Separator className="mb-4" />
       <nav className="space-y-2 flex-1">
         {navigationItems.map((item) => (
           <Link
