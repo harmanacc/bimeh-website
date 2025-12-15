@@ -74,7 +74,11 @@ export default function UploadLeadsPage() {
         setColumns([]);
         setFile(null);
       } else {
-        toast.error(`هیچ لیدی اضافه نشد. خطاها: ${data.errors}`);
+        const errorMessages = [
+          ...new Set(data.errorDetails.map((e: any) => e.error)),
+        ];
+        const errorText = errorMessages.join(", ");
+        toast.error(`هیچ لیدی اضافه نشد. خطا: ${errorText}`);
         console.error("Insertion errors:", data.errorDetails);
       }
     } catch (error) {

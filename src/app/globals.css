@@ -118,3 +118,22 @@ body {
     font-family: var(--font-sans);
   }
 }
+
+/* Custom sonner toast colors */
+.sonner-success-custom {
+  background: forestgreen !important;
+  color: white !important;
+  border-color: green !important;
+}
+
+.sonner-error-custom {
+  background: crimson !important;
+  color: white !important;
+  border-color: red !important;
+}
+
+.sonner-info-custom {
+  background: dodgerblue !important;
+  color: white !important;
+  border-color: dodgerblue !important;
+}
