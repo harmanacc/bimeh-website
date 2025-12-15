@@ -20,10 +20,3 @@ import { getProductBySlug } from "@/db/queries/products";
 
 const product = await getProductBySlug("car-insurance");
 ```
-
-## Tables
-
-- `products` - Insurance product listings
-- `users` - User accounts
-- `sms_queues` - SMS campaign queues
-- `reminders` - User reminders
