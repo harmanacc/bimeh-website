@@ -35,11 +35,11 @@ Implement a complete authentication system for BIM760, supporting super admin, a
 
 ### Tasklist
 
-- [ ] Update usersTable schema with new fields
-- [ ] Add super-admin to userRoleEnum
-- [ ] Generate DB migration
-- [ ] Configure NextAuth setup
-- [ ] Implement auth middleware
-- [ ] Create profile update actions
-- [ ] Add super admin seeding
-- [ ] Implement admin creation action
+- [x] Update usersTable schema with new fields
+- [x] Add super-admin to userRoleEnum
+- [x] Generate DB migration
+- [x] Configure NextAuth setup
+- [x] Implement auth middleware
+- [x] Create profile update actions
+- [x] Add super admin seeding
+- [x] Implement admin creation action
