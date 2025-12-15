@@ -31,7 +31,11 @@ export const productTypeEnum = pgEnum("product_type", [
   "life-insurance",
 ]);
 
-export const userRoleEnum = pgEnum("user_role", ["customer", "admin"]);
+export const userRoleEnum = pgEnum("user_role", [
+  "customer",
+  "admin",
+  "super-admin",
+]);
 
 export const queueStatusEnum = pgEnum("queue_status", [
   "pending",
@@ -82,8 +86,11 @@ export const productsTable = pgTable("products", {
 export const usersTable = pgTable("users", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).unique().notNull(),
+  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
   phone: varchar("phone", { length: 20 }),
-  fullName: varchar("full_name", { length: 255 }),
+  firstName: varchar("first_name", { length: 255 }),
+  lastName: varchar("last_name", { length: 255 }),
+  displayName: varchar("display_name", { length: 255 }),
   role: userRoleEnum("role").default("customer"),
   isActive: boolean("is_active").default(true),
   ...timestamps,
