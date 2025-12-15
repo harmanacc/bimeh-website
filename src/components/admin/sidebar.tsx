@@ -19,8 +19,8 @@ import { Separator } from "@/components/ui/separator";
 const navigationItems = [
   { name: "مدیریت محصولات", href: "/admin/products", icon: Package },
   { name: "آپلود لیدها", href: "/admin/upload-leads", icon: Upload },
-  { name: "جدول لیدها", href: "/admin/leads-table", icon: Table },
-  { name: "جدول مشتریان", href: "/admin/customers-table", icon: Users },
+  { name: "مدیریت لیدها", href: "/admin/outreach/leads", icon: Table },
+  { name: "مدیریت مشتریان", href: "/admin/outreach/customers", icon: Users },
   { name: "تاریخچه فعالیت", href: "/admin/activity-history", icon: History },
   { name: "صادرات داده", href: "/admin/export-data", icon: Download },
 ];

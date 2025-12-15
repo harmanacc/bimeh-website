@@ -37,12 +37,12 @@ Create an admin page for uploading leads from Excel files with an interactive pr
 
 ### Tasklist
 
-- [ ] Create upload page with file input and preview area
-- [ ] Implement API route for file upload and parsing
-- [ ] Add SheetJS dependency
-- [ ] Create editable preview table component
-- [ ] Parse Excel and display in table
-- [ ] Implement add/remove rows and columns in preview
-- [ ] Validate data and column matches
-- [ ] Insert leads to database on confirm
-- [ ] Add progress feedback and notifications
+- [x] Create upload page with file input and preview area
+- [x] Implement API route for file upload and parsing
+- [x] Add SheetJS dependency
+- [x] Create editable preview table component
+- [x] Parse Excel and display in table
+- [x] Implement add/remove rows and columns in preview
+- [x] Validate data and column matches
+- [x] Insert leads to database on confirm
+- [x] Add progress feedback and notifications

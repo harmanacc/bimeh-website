@@ -15,9 +15,9 @@ Implement tabbed tables for leads and customers with search, pagination, and act
 
 ### Tasklist
 
-- [ ] Create leads table page with data fetching
-- [ ] Create customers table page
-- [ ] Integrate Tanstack Table component
-- [ ] Add search functionality
-- [ ] Implement pagination
-- [ ] Add table actions
+- [x] Create leads table page with data fetching
+- [x] Create customers table page
+- [x] Integrate shadcn Table component
+- [x] Add search functionality
+- [x] Implement pagination
+- [x] Add table actions

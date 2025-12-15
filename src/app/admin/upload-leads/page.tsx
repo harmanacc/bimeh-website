@@ -67,10 +67,16 @@ export default function UploadLeadsPage() {
         throw new Error("Failed to insert leads");
       }
 
-      toast.success("لیدها با موفقیت اضافه شدند");
-      setPreviewData([]);
-      setColumns([]);
-      setFile(null);
+      const data = await response.json();
+      if (data.inserted > 0) {
+        toast.success(`${data.inserted} لید با موفقیت اضافه شد`);
+        setPreviewData([]);
+        setColumns([]);
+        setFile(null);
+      } else {
+        toast.error(`هیچ لیدی اضافه نشد. خطاها: ${data.errors}`);
+        console.error("Insertion errors:", data.errorDetails);
+      }
     } catch (error) {
       toast.error("خطا در اضافه کردن لیدها");
       console.error(error);

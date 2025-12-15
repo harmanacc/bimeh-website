@@ -4,17 +4,36 @@ import { db } from "@/db";
 import { leadsTable, productsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-function normalizePhone(phone: string): string {
-  // Remove spaces, dashes, etc.
-  let normalized = phone.replace(/[\s\-\(\)]/g, "");
+function normalizePhone(phone: string | number): string {
+  // Convert to string if number
+  let normalized = String(phone).replace(/[\s\-\(\)]/g, "");
+
+  // If already international format, return as is
+  if (normalized.startsWith("+98")) {
+    return normalized;
+  }
+
+  // If starts with 98, add +
+  if (normalized.startsWith("98")) {
+    return "+" + normalized;
+  }
+
   // If starts with 0, replace with +98
   if (normalized.startsWith("0")) {
-    normalized = "+98" + normalized.slice(1);
+    return "+98" + normalized.slice(1);
   }
-  // If starts with 9, assume +989
-  if (normalized.startsWith("9") && !normalized.startsWith("+98")) {
-    normalized = "+98" + normalized;
+
+  // If starts with 9, assume it's 9xxxxxxxxx, add +98
+  if (normalized.startsWith("9") && normalized.length === 10) {
+    return "+98" + normalized;
   }
+
+  // Otherwise, try to add +98 if it looks like a mobile number
+  if (/^9\d{9}$/.test(normalized)) {
+    return "+98" + normalized;
+  }
+
+  // Return as is if doesn't match patterns
   return normalized;
 }
 
@@ -44,12 +63,7 @@ function mapColumns(row: any): {
     phone: "phone",
     "شماره تلفن": "phone",
     phone_number: "phone",
-    // productName
-    "نوع بیمه": "productName",
-    insuranceType: "productName",
-    insurance_type: "productName",
-    product: "productName",
-    محصول: "productName",
+    // productName removed - products selected manually in preview
   };
 
   const mapped: any = {};
@@ -89,15 +103,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const headers = jsonData[0] as string[];
+    const allHeaders = jsonData[0] as string[];
     const rows = jsonData.slice(1) as any[][];
+
+    // Only include relevant columns
+    const allowedColumns = [
+      "نام",
+      "اسم",
+      "name",
+      "firstName",
+      "first_name",
+      "نام خانوادگی",
+      "فامیلی",
+      "surname",
+      "lastName",
+      "last_name",
+      "تلفن",
+      "شماره",
+      "phone",
+      "شماره تلفن",
+      "phone_number",
+    ];
+    const headers = allHeaders.filter((h) => allowedColumns.includes(h));
 
     const leads = rows.map((row) => {
       const rowObj: any = {};
       headers.forEach((header, index) => {
-        rowObj[header] = row[index] || "";
+        const headerIndex = allHeaders.indexOf(header);
+        rowObj[header] = row[headerIndex] || "";
       });
       return rowObj;
+    });
+
+    // Add product column for manual selection
+    headers.push("محصول");
+    leads.forEach((lead) => {
+      lead["محصول"] = "";
     });
 
     return NextResponse.json({ leads, columns: headers });

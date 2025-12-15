@@ -85,6 +85,7 @@ Before any implementation:
    - Follow basic security practices (input validation, no client-side secrets)
    - Log activities securely
      6- the contents of the website should always be persian.
+     7- use `sonner` for toasts. for every operation .
 
 ## Coding Practices
 
