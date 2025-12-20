@@ -141,3 +141,29 @@ export async function deleteLead(id: number) {
 export async function deleteLeads(ids: number[]) {
   await db.delete(leadsTable).where(sql`${leadsTable.id} IN ${ids}`);
 }
+
+// Get leads by IDs
+export async function getLeadsByIds(ids: number[]) {
+  if (ids.length === 0) return [];
+
+  return await db
+    .select({
+      id: leadsTable.id,
+      firstName: leadsTable.firstName,
+      lastName: leadsTable.lastName,
+      phone: leadsTable.phone,
+      productId: leadsTable.productId,
+      source: leadsTable.source,
+      importedBy: leadsTable.importedBy,
+      status: leadsTable.status,
+      createdAt: leadsTable.createdAt,
+      updatedAt: leadsTable.updatedAt,
+      product: {
+        id: productsTable.id,
+        name: productsTable.name,
+      },
+    })
+    .from(leadsTable)
+    .leftJoin(productsTable, eq(leadsTable.productId, productsTable.id))
+    .where(sql`${leadsTable.id} IN ${ids}`);
+}

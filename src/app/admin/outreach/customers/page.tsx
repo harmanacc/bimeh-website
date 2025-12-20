@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMessagingStore } from "@/lib/stores/messaging-store";
+import GroupSelectionDialog from "@/components/admin/outreach/group-selection-dialog";
 
 interface Customer {
   id: number;
@@ -54,6 +55,7 @@ export default function CustomersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
+  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
   const limit = 10;
 
   const fetchCustomers = async (searchTerm = "", pageNum = 1) => {
@@ -144,20 +146,13 @@ export default function CustomersPage() {
   };
 
   const handleAddToGroup = () => {
-    const selectedCustomerObjects = customers.filter((customer) =>
-      selectedCustomers.includes(customer.id)
-    );
-    selectedCustomerObjects.forEach((customer) => {
-      addToGroup({
-        id: customer.id,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        phone: customer.phone,
-        type: "customer",
-      });
-    });
+    if (selectedCustomers.length === 0) return;
+    setIsGroupDialogOpen(true);
+  };
+
+  const handleGroupDialogSuccess = () => {
     setSelectedCustomers([]);
-    toast.success(`${selectedCustomerObjects.length} مشتری به گروه اضافه شد`);
+    fetchCustomers(search, page); // Refresh to update any changes
   };
 
   return (
@@ -361,6 +356,14 @@ export default function CustomersPage() {
           )}
         </CardContent>
       </Card>
+
+      <GroupSelectionDialog
+        isOpen={isGroupDialogOpen}
+        onClose={() => setIsGroupDialogOpen(false)}
+        userIds={selectedCustomers}
+        userType="customer"
+        onSuccess={handleGroupDialogSuccess}
+      />
     </div>
   );
 }

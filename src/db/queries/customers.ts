@@ -174,3 +174,30 @@ export async function convertLeadToCustomer(
 
   return await createCustomer(customerData);
 }
+
+// Get customers by IDs
+export async function getCustomersByIds(ids: number[]) {
+  if (ids.length === 0) return [];
+
+  return await db
+    .select({
+      id: customersTable.id,
+      leadId: customersTable.leadId,
+      firstName: customersTable.firstName,
+      lastName: customersTable.lastName,
+      phone: customersTable.phone,
+      insuranceType: customersTable.insuranceType,
+      preferredChannel: customersTable.preferredChannel,
+      status: customersTable.status,
+      createdAt: customersTable.createdAt,
+      updatedAt: customersTable.updatedAt,
+      lead: {
+        id: leadsTable.id,
+        productId: leadsTable.productId,
+        source: leadsTable.source,
+      },
+    })
+    .from(customersTable)
+    .leftJoin(leadsTable, eq(customersTable.leadId, leadsTable.id))
+    .where(sql`${customersTable.id} IN ${ids}`);
+}

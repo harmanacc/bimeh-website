@@ -5,6 +5,8 @@ import {
   deleteGroup,
   getGroupMembers,
 } from "@/db/queries/groups";
+import { getLeadsByIds } from "@/db/queries/leads";
+import { getCustomersByIds } from "@/db/queries/customers";
 
 export async function GET(
   request: NextRequest,
@@ -23,9 +25,37 @@ export async function GET(
 
     const members = await getGroupMembers(id);
 
+    // Get user details for each member
+    const leadIds = members
+      .filter((m) => m.userType === "lead")
+      .map((m) => m.userId);
+    const customerIds = members
+      .filter((m) => m.userType === "customer")
+      .map((m) => m.userId);
+
+    const [leads, customers] = await Promise.all([
+      leadIds.length > 0 ? getLeadsByIds(leadIds) : Promise.resolve([]),
+      customerIds.length > 0
+        ? getCustomersByIds(customerIds)
+        : Promise.resolve([]),
+    ]);
+
+    // Combine members with user details
+    const membersWithDetails = members.map((member) => {
+      const userDetails =
+        member.userType === "lead"
+          ? leads.find((l) => l.id === member.userId)
+          : customers.find((c) => c.id === member.userId);
+
+      return {
+        ...member,
+        user: userDetails,
+      };
+    });
+
     return NextResponse.json({
       group,
-      members,
+      members: membersWithDetails,
       _count: {
         members: members.length,
       },

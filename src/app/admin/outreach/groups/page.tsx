@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -28,6 +29,7 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -48,6 +50,24 @@ interface Group {
   };
 }
 
+interface GroupMemberWithUser {
+  id: number;
+  groupId: number;
+  userId: number;
+  userType: "lead" | "customer";
+  addedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    status?: string;
+    // Other fields...
+  };
+}
+
 export default function GroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +77,11 @@ export default function GroupsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<Group | null>(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
+  const [membersDialogOpen, setMembersDialogOpen] = useState(false);
+  const [selectedGroupMembers, setSelectedGroupMembers] = useState<
+    GroupMemberWithUser[]
+  >([]);
+  const [selectedGroupName, setSelectedGroupName] = useState("");
   const limit = 10;
 
   const fetchGroups = async (pageNum = 1) => {
@@ -163,6 +188,23 @@ export default function GroupsPage() {
   const openEditDialog = (group: Group) => {
     setEditingGroup(group);
     setFormData({ name: group.name, description: group.description || "" });
+  };
+
+  const openMembersDialog = async (group: Group) => {
+    try {
+      const response = await fetch(`/api/admin/outreach/groups/${group.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedGroupMembers(data.members || []);
+        setSelectedGroupName(group.name);
+        setMembersDialogOpen(true);
+      } else {
+        toast.error("خطا در بارگذاری اعضا");
+      }
+    } catch (error) {
+      toast.error("خطا در بارگذاری اعضا");
+      console.error(error);
+    }
   };
 
   return (
@@ -276,7 +318,11 @@ export default function GroupsPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button size="sm" variant="outline">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => openMembersDialog(group)}
+                            >
                               <Users className="h-4 w-4" />
                             </Button>
                             <Button
@@ -378,6 +424,79 @@ export default function GroupsPage() {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Members Dialog */}
+      <Dialog open={membersDialogOpen} onOpenChange={setMembersDialogOpen}>
+        <DialogContent
+          className="max-w-4xl max-h-[80vh] overflow-y-auto"
+          dir="rtl"
+        >
+          <DialogHeader>
+            <DialogTitle>اعضای گروه: {selectedGroupName}</DialogTitle>
+          </DialogHeader>
+
+          {selectedGroupMembers.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">
+              این گروه هیچ عضوی ندارد.
+            </p>
+          ) : (
+            <div className="border rounded-md overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-right">نوع</TableHead>
+                    <TableHead className="text-right">نام</TableHead>
+                    <TableHead className="text-right">نام خانوادگی</TableHead>
+                    <TableHead className="text-right">شماره تلفن</TableHead>
+                    <TableHead className="text-right">وضعیت</TableHead>
+                    <TableHead className="text-right">
+                      تاریخ اضافه شدن
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {selectedGroupMembers.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell className="text-right">
+                        <Badge variant="outline">
+                          {member.userType === "lead" ? "لید" : "مشتری"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {member.user?.firstName || "-"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {member.user?.lastName || "-"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {member.user?.phone || "-"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {member.user?.status ? (
+                          <Badge variant="secondary">
+                            {member.user.status}
+                          </Badge>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {new Date(member.createdAt).toLocaleString("fa-IR", {
+                          timeZone: "Asia/Tehran",
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button onClick={() => setMembersDialogOpen(false)}>بستن</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

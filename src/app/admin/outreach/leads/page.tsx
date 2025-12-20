@@ -35,6 +35,7 @@ import {
 import { toast } from "sonner";
 import { convertLeadToCustomerAction, markLeadAsContacted } from "../actions";
 import { useMessagingStore } from "@/lib/stores/messaging-store";
+import GroupSelectionDialog from "@/components/admin/outreach/group-selection-dialog";
 
 interface Lead {
   id: number;
@@ -60,6 +61,7 @@ export default function LeadsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
+  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
   const limit = 10;
 
   const fetchLeads = async (searchTerm = "", pageNum = 1) => {
@@ -167,20 +169,13 @@ export default function LeadsPage() {
   };
 
   const handleAddToGroup = () => {
-    const selectedLeadObjects = leads.filter((lead) =>
-      selectedLeads.includes(lead.id)
-    );
-    selectedLeadObjects.forEach((lead) => {
-      addToGroup({
-        id: lead.id,
-        firstName: lead.firstName,
-        lastName: lead.lastName,
-        phone: lead.phone,
-        type: "lead",
-      });
-    });
+    if (selectedLeads.length === 0) return;
+    setIsGroupDialogOpen(true);
+  };
+
+  const handleGroupDialogSuccess = () => {
     setSelectedLeads([]);
-    toast.success(`${selectedLeadObjects.length} لید به گروه اضافه شد`);
+    fetchLeads(search, page); // Refresh to update any changes
   };
 
   return (
@@ -395,6 +390,14 @@ export default function LeadsPage() {
           )}
         </CardContent>
       </Card>
+
+      <GroupSelectionDialog
+        isOpen={isGroupDialogOpen}
+        onClose={() => setIsGroupDialogOpen(false)}
+        userIds={selectedLeads}
+        userType="lead"
+        onSuccess={handleGroupDialogSuccess}
+      />
     </div>
   );
 }
