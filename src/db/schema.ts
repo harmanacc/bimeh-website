@@ -60,6 +60,14 @@ export const outreachTypeEnum = pgEnum("outreach_type", [
   "custom",
 ]);
 
+export const leadStatusEnum = pgEnum("lead_status", ["lead", "contacted"]);
+
+export const customerStatusEnum = pgEnum("customer_status", [
+  "contacted",
+  "target",
+  "active",
+]);
+
 // Tables
 
 export const productsTable = pgTable("products", {
@@ -116,6 +124,7 @@ export const leadsTable = pgTable("leads", {
   productId: integer("product_id").references(() => productsTable.id),
   source: varchar("source", { length: 255 }), // e.g., Excel filename or campaign
   importedBy: varchar("imported_by", { length: 255 }),
+  status: leadStatusEnum("status").default("lead"),
   ...timestamps,
 });
 
@@ -130,6 +139,30 @@ export const customersTable = pgTable("customers", {
   phone: varchar("phone", { length: 20 }).unique().notNull(),
   insuranceType: text("insurance_type"),
   preferredChannel: messageChannelEnum("preferred_channel").default("whatsapp"),
+  status: customerStatusEnum("status").default("contacted"),
+  nationalId: varchar("national_id", { length: 10 }),
+  birthCertificateNumber: varchar("birth_certificate_number", { length: 255 }),
+  birthCertificateIssuancePlace: varchar("birth_certificate_issuance_place", {
+    length: 255,
+  }),
+  placeOfBirth: varchar("place_of_birth", { length: 255 }),
+  dateOfBirth: timestamp("date_of_birth"),
+  telegramId: varchar("telegram_id", { length: 255 }),
+  whatsappId: varchar("whatsapp_id", { length: 255 }),
+  eitaId: varchar("eita_id", { length: 255 }),
+  baleId: varchar("bale_id", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  gender: varchar("gender", { length: 10 }),
+  maritalStatus: varchar("marital_status", { length: 20 }),
+  numberOfChildren: integer("number_of_children"),
+  militaryServiceStatus: varchar("military_service_status", { length: 50 }),
+  occupation: varchar("occupation", { length: 255 }),
+  landlinePhone: varchar("landline_phone", { length: 20 }),
+  emergencyPhone: varchar("emergency_phone", { length: 20 }),
+  emergencyPhoneRelation: varchar("emergency_phone_relation", { length: 255 }),
+  residentialAddress: text("residential_address"),
+  workAddress: text("work_address"),
+  residentialPostalCode: varchar("residential_postal_code", { length: 10 }),
   ...timestamps,
 });
 

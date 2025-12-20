@@ -27,9 +27,9 @@ Add status fields to leads and customers tables. Add extensive customer data fie
 
 ### Tasklist
 
-- [ ] Define status enums
-- [ ] Add status column to leadsTable
-- [ ] Add status column to customersTable
-- [ ] Add new customer data fields
-- [ ] Update type exports
-- [ ] Create and run migration
+- [x] Define status enums
+- [x] Add status column to leadsTable
+- [x] Add status column to customersTable
+- [x] Add new customer data fields
+- [x] Update type exports
+- [x] Create and run migration

@@ -29,6 +29,13 @@
       "when": 1765832307658,
       "tag": "0003_romantic_plazm",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1766267821104,
+      "tag": "0004_classy_firebird",
+      "breakpoints": true
     }
   ]
 }
