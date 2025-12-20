@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { leadsTable, productsTable } from "@/db/schema";
-import { eq, like, or, desc, asc, sql } from "drizzle-orm";
+import { eq, like, or, desc, asc, sql, inArray } from "drizzle-orm";
 import type { Lead, NewLead } from "@/db/schema";
 
 // Get all leads with optional pagination and search
@@ -165,5 +165,5 @@ export async function getLeadsByIds(ids: number[]) {
     })
     .from(leadsTable)
     .leftJoin(productsTable, eq(leadsTable.productId, productsTable.id))
-    .where(sql`${leadsTable.id} IN ${ids}`);
+    .where(inArray(leadsTable.id, ids));
 }

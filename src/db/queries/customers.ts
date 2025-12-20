@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { customersTable, leadsTable, productsTable } from "@/db/schema";
-import { eq, like, or, desc, asc, sql } from "drizzle-orm";
+import { eq, like, or, desc, asc, sql, inArray } from "drizzle-orm";
 import type { Customer, NewCustomer } from "@/db/schema";
 
 // Get all customers with optional pagination and search
@@ -199,5 +199,5 @@ export async function getCustomersByIds(ids: number[]) {
     })
     .from(customersTable)
     .leftJoin(leadsTable, eq(customersTable.leadId, leadsTable.id))
-    .where(sql`${customersTable.id} IN ${ids}`);
+    .where(inArray(customersTable.id, ids));
 }
