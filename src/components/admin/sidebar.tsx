@@ -10,6 +10,7 @@ import {
   Settings,
   User,
   Package,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
@@ -21,6 +22,7 @@ const navigationItems = [
   { name: "آپلود لیدها", href: "/admin/upload-leads", icon: Upload },
   { name: "مدیریت لیدها", href: "/admin/outreach/leads", icon: Table },
   { name: "مدیریت مشتریان", href: "/admin/outreach/customers", icon: Users },
+  { name: "ارسال پیام", href: "/admin/outreach/messages", icon: MessageSquare },
   { name: "تاریخچه فعالیت", href: "/admin/activity-history", icon: History },
   { name: "صادرات داده", href: "/admin/export-data", icon: Download },
 ];
