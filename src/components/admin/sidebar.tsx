@@ -11,6 +11,7 @@ import {
   User,
   Package,
   MessageSquare,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
@@ -19,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 
 const navigationItems = [
   { name: "مدیریت محصولات", href: "/admin/products", icon: Package },
+  { name: "مدیریت قالب‌ها", href: "/admin/templates", icon: FileText },
   { name: "آپلود لیدها", href: "/admin/upload-leads", icon: Upload },
   { name: "مدیریت لیدها", href: "/admin/outreach/leads", icon: Table },
   { name: "مدیریت مشتریان", href: "/admin/outreach/customers", icon: Users },

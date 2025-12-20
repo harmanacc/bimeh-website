@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { messageTemplatesTable } from "@/db/schema";
-import { eq, desc, isNull, or } from "drizzle-orm";
+import { eq, desc, isNull, or, and } from "drizzle-orm";
 import type { MessageTemplate, NewMessageTemplate } from "@/db/schema";
 
 // Get all message templates
@@ -113,4 +113,38 @@ export async function deleteMessageTemplate(id: number) {
     .where(eq(messageTemplatesTable.id, id))
     .returning();
   return template;
+}
+
+// Set template as default for its channel and product/global scope
+export async function setDefaultTemplate(id: number) {
+  // First get the template to know its channel and productId
+  const template = await getMessageTemplateById(id);
+  if (!template) throw new Error("Template not found");
+
+  // Unset all defaults for the same channel and scope (global or product-specific)
+  const unsetCondition = template.productId
+    ? and(
+        eq(messageTemplatesTable.channel, template.channel),
+        eq(messageTemplatesTable.isDefault, true),
+        eq(messageTemplatesTable.productId, template.productId)
+      )
+    : and(
+        eq(messageTemplatesTable.channel, template.channel),
+        eq(messageTemplatesTable.isDefault, true),
+        isNull(messageTemplatesTable.productId)
+      );
+
+  await db
+    .update(messageTemplatesTable)
+    .set({ isDefault: false })
+    .where(unsetCondition);
+
+  // Set the new default
+  const [updatedTemplate] = await db
+    .update(messageTemplatesTable)
+    .set({ isDefault: true })
+    .where(eq(messageTemplatesTable.id, id))
+    .returning();
+
+  return updatedTemplate;
 }
