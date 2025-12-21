@@ -40,11 +40,12 @@ export interface DashboardMetrics {
 
 // Get comprehensive dashboard metrics
 export async function getDashboardMetrics(): Promise<DashboardMetrics> {
-  // Get today's date in UTC (adjust for timezone if needed)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  // Get today's date in UTC
+  const now = new Date();
+  const today = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  );
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
   // Run all queries in parallel for better performance
   const [
@@ -80,7 +81,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       .where(
         and(
           gte(activitiesTable.sentAt, today),
-          sql`${activitiesTable.sentAt} < ${tomorrow}`,
+          sql`${activitiesTable.sentAt} < ${tomorrow.toISOString()}`,
           eq(activitiesTable.status, "sent")
         )
       ),
@@ -92,7 +93,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       .where(
         and(
           gte(customersTable.createdAt, today),
-          sql`${customersTable.createdAt} < ${tomorrow}`
+          sql`${customersTable.createdAt} < ${tomorrow.toISOString()}`
         )
       ),
 
@@ -103,7 +104,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       .where(
         and(
           gte(leadsTable.createdAt, today),
-          sql`${leadsTable.createdAt} < ${tomorrow}`
+          sql`${leadsTable.createdAt} < ${tomorrow.toISOString()}`
         )
       ),
 
