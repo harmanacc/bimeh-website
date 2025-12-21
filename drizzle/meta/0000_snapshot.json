@@ -1,5 +1,5 @@
 {
-  "id": "e6708c61-213b-457c-a927-c3d5fe47d216",
+  "id": "a49f1284-fdcc-4d03-bd5f-521c6332ee86",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -41,16 +41,14 @@
         },
         "channel": {
           "name": "channel",
-          "type": "message_channel",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
           "default": "'whatsapp'"
         },
         "outreach_type": {
           "name": "outreach_type",
-          "type": "outreach_type",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false,
           "default": "'initial-contact'"
@@ -75,8 +73,7 @@
         },
         "status": {
           "name": "status",
-          "type": "activity_status",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -244,11 +241,143 @@
         },
         "preferred_channel": {
           "name": "preferred_channel",
-          "type": "message_channel",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false,
           "default": "'whatsapp'"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'contacted'"
+        },
+        "national_id": {
+          "name": "national_id",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birth_certificate_number": {
+          "name": "birth_certificate_number",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birth_certificate_issuance_place": {
+          "name": "birth_certificate_issuance_place",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "place_of_birth": {
+          "name": "place_of_birth",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_of_birth": {
+          "name": "date_of_birth",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telegram_id": {
+          "name": "telegram_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whatsapp_id": {
+          "name": "whatsapp_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eita_id": {
+          "name": "eita_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bale_id": {
+          "name": "bale_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "marital_status": {
+          "name": "marital_status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "number_of_children": {
+          "name": "number_of_children",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "military_service_status": {
+          "name": "military_service_status",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "occupation": {
+          "name": "occupation",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "landline_phone": {
+          "name": "landline_phone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emergency_phone": {
+          "name": "emergency_phone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emergency_phone_relation": {
+          "name": "emergency_phone_relation",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "residential_address": {
+          "name": "residential_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "work_address": {
+          "name": "work_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "residential_postal_code": {
+          "name": "residential_postal_code",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -295,6 +424,156 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.group_members": {
+      "name": "group_members",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_type": {
+          "name": "user_type",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "added_by": {
+          "name": "added_by",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unique_group_user": {
+          "name": "unique_group_user",
+          "columns": [
+            {
+              "expression": "group_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "group_members_group_id_groups_id_fk": {
+          "name": "group_members_group_id_groups_id_fk",
+          "tableFrom": "group_members",
+          "tableTo": "groups",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.groups": {
+      "name": "groups",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.leads": {
       "name": "leads",
       "schema": "",
@@ -323,9 +602,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "insurance_type": {
-          "name": "insurance_type",
-          "type": "text",
+        "product_id": {
+          "name": "product_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -340,6 +619,13 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'lead'"
         },
         "created_at": {
           "name": "created_at",
@@ -357,7 +643,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "leads_product_id_products_id_fk": {
+          "name": "leads_product_id_products_id_fk",
+          "tableFrom": "leads",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "leads_phone_unique": {
@@ -396,11 +696,16 @@
         },
         "channel": {
           "name": "channel",
-          "type": "message_channel",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
           "default": "'whatsapp'"
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "is_default": {
           "name": "is_default",
@@ -431,7 +736,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "message_templates_product_id_products_id_fk": {
+          "name": "message_templates_product_id_products_id_fk",
+          "tableFrom": "message_templates",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -448,12 +767,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "slug": {
-          "name": "slug",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -466,28 +779,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "type": {
-          "name": "type",
-          "type": "product_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "coverage_points": {
-          "name": "coverage_points",
+        "keywords": {
+          "name": "keywords",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "premium_start": {
-          "name": "premium_start",
-          "type": "numeric(10, 2)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "premium_end": {
-          "name": "premium_end",
-          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
@@ -516,15 +810,7 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "products_slug_unique": {
-          "name": "products_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -656,8 +942,7 @@
         },
         "status": {
           "name": "status",
-          "type": "queue_status",
-          "typeSchema": "public",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false,
           "default": "'pending'"
@@ -735,22 +1020,39 @@
           "primaryKey": false,
           "notNull": true
         },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "phone": {
           "name": "phone",
           "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false
         },
-        "full_name": {
-          "name": "full_name",
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "display_name": {
+          "name": "display_name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "role": {
           "name": "role",
-          "type": "user_role",
-          "typeSchema": "public",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false,
           "default": "'customer'"
@@ -794,70 +1096,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.activity_status": {
-      "name": "activity_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "sent",
-        "failed"
-      ]
-    },
-    "public.message_channel": {
-      "name": "message_channel",
-      "schema": "public",
-      "values": [
-        "whatsapp",
-        "eita",
-        "telegram",
-        "bale",
-        "instgram",
-        "sms",
-        "email"
-      ]
-    },
-    "public.outreach_type": {
-      "name": "outreach_type",
-      "schema": "public",
-      "values": [
-        "initial-contact",
-        "follow-up",
-        "reminder",
-        "promotion",
-        "custom"
-      ]
-    },
-    "public.product_type": {
-      "name": "product_type",
-      "schema": "public",
-      "values": [
-        "car-insurance",
-        "health-insurance",
-        "home-insurance",
-        "travel-insurance",
-        "life-insurance"
-      ]
-    },
-    "public.queue_status": {
-      "name": "queue_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "processing",
-        "sent",
-        "failed"
-      ]
-    },
-    "public.user_role": {
-      "name": "user_role",
-      "schema": "public",
-      "values": [
-        "customer",
-        "admin"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -1,2 +1,0 @@
-ALTER TABLE "message_templates" ADD COLUMN "product_id" integer;--> statement-breakpoint
-ALTER TABLE "message_templates" ADD CONSTRAINT "message_templates_product_id_products_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action;

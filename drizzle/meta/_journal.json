@@ -5,71 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1765822817556,
-      "tag": "0000_strange_microchip",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1765826885082,
-      "tag": "0001_known_luke_cage",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1765831353417,
-      "tag": "0002_lame_jubilee",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1765832307658,
-      "tag": "0003_romantic_plazm",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1766267821104,
-      "tag": "0004_classy_firebird",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1766268333471,
-      "tag": "0005_redundant_vision",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1766268353542,
-      "tag": "0006_spotty_sandman",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1766270088112,
-      "tag": "0007_loving_madripoor",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1766271754502,
-      "tag": "0008_clammy_squadron_supreme",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1766272277999,
-      "tag": "0009_chilly_sage",
+      "when": 1766325241890,
+      "tag": "0000_greedy_morph",
       "breakpoints": true
     }
   ]
