@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import CustomerEditForm from "@/components/admin/outreach/customer-edit-form";
+import CustomerNotesPanel from "@/components/admin/outreach/customer-notes-panel";
+import ActivityHistoryPanel from "@/components/admin/outreach/activity-history-panel";
 
 interface Customer {
   id: number;
@@ -351,6 +353,12 @@ export default function CustomerDetailPage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Notes and Activity History */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CustomerNotesPanel customerId={parseInt(customerId)} />
+            <ActivityHistoryPanel customerId={parseInt(customerId)} />
           </div>
         </>
       )}

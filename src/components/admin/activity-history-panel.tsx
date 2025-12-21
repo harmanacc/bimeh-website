@@ -79,14 +79,14 @@ export function ActivityHistoryPanel({
     }
 
     // Channel filter
-    if (channelFilter) {
+    if (channelFilter && channelFilter !== "all") {
       filtered = filtered.filter(
         (activity) => activity.channel === channelFilter
       );
     }
 
     // Status filter
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== "all") {
       filtered = filtered.filter(
         (activity) => activity.status === statusFilter
       );
@@ -185,7 +185,7 @@ export function ActivityHistoryPanel({
                   <SelectValue placeholder="همه کانال‌ها" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">همه</SelectItem>
+                  <SelectItem value="all">همه</SelectItem>
                   <SelectItem value="whatsapp">واتس‌اپ</SelectItem>
                   <SelectItem value="sms">پیامک</SelectItem>
                   <SelectItem value="email">ایمیل</SelectItem>
@@ -200,7 +200,7 @@ export function ActivityHistoryPanel({
                   <SelectValue placeholder="همه وضعیت‌ها" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">همه</SelectItem>
+                  <SelectItem value="all">همه</SelectItem>
                   <SelectItem value="sent">ارسال شده</SelectItem>
                   <SelectItem value="pending">در انتظار</SelectItem>
                   <SelectItem value="failed">ناموفق</SelectItem>

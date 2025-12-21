@@ -5,7 +5,7 @@ import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
-export const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       name: "credentials",
@@ -59,6 +59,4 @@ export const authOptions = {
   pages: {
     signIn: "/auth/signin",
   },
-};
-
-export default NextAuth(authOptions);
+});
