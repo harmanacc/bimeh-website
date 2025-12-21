@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { read, utils } from "xlsx";
 import { db } from "@/db";
-import { leadsTable, productsTable } from "@/db/schema";
+import { leadsTable, productsTable, customersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import {
   normalizePhoneNumber,
@@ -153,12 +153,20 @@ export async function PUT(request: NextRequest) {
           continue;
         }
 
-        // Check for duplicate phone
-        const existing = await db
+        // Check for duplicate phone in leads and customers
+        const existingLead = await db
           .select()
           .from(leadsTable)
-          .where(eq(leadsTable.phone, normalizedPhone));
-        if (existing.length > 0) {
+          .where(eq(leadsTable.phone, normalizedPhone))
+          .limit(1);
+
+        const existingCustomer = await db
+          .select()
+          .from(customersTable)
+          .where(eq(customersTable.phone, normalizedPhone))
+          .limit(1);
+
+        if (existingLead.length > 0 || existingCustomer.length > 0) {
           errors.push({ lead, error: "Duplicate phone number" });
           continue;
         }

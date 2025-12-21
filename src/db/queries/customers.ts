@@ -157,7 +157,12 @@ export async function convertLeadToCustomer(
     status: additionalData.status || "new",
   };
 
-  return await createCustomer(customerData);
+  const customer = await createCustomer(customerData);
+
+  // Delete the lead after successful conversion
+  await db.delete(leadsTable).where(eq(leadsTable.id, leadId));
+
+  return customer;
 }
 
 // Get customers by IDs
