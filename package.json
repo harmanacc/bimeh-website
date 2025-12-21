@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "PORT=7600 next dev",
-    "prebuild": "pnpm run db:check && pnpm run db:migrate && pnpm run seed:admin || echo 'Database not available, skipping db operations'",
+    "prebuild": "pnpm run db:create || true && pnpm run db:check && pnpm run db:migrate && pnpm run seed:admin || echo 'Database not available, skipping db operations'",
     "build": "next build",
     "start": "PORT=7600 next start",
     "lint": "eslint",
