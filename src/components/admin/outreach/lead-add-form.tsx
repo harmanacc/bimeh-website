@@ -24,11 +24,12 @@ import {
 } from "@/components/ui/form";
 import { Save, X } from "lucide-react";
 import { toast } from "sonner";
+import { phoneNumberSchema } from "@/lib/phone-validation";
 
 const leadSchema = z.object({
   firstName: z.string().min(1, "نام الزامی است"),
   lastName: z.string().min(1, "نام خانوادگی الزامی است"),
-  phone: z.string().min(1, "شماره تلفن الزامی است"),
+  phone: phoneNumberSchema,
   productId: z.string().optional(),
   source: z.string().optional(),
   status: z.enum(["lead", "contacted", "deactivated"]),

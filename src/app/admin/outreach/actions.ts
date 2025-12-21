@@ -7,6 +7,7 @@ import { createActivity } from "@/db/queries/activities";
 import { db } from "@/db";
 import { activitiesTable } from "@/db/schema";
 import { replaceTemplateVariables } from "@/lib/template-utils";
+import { toWhatsAppFormat } from "@/lib/phone-utils";
 import type {
   Customer,
   Lead,
@@ -121,8 +122,8 @@ export async function sendWhatsAppMessage(
   adminId?: string
 ) {
   try {
-    // Normalize phone number (remove any non-numeric characters except +)
-    const normalizedPhone = recipient.phone.replace(/[^\d+]/g, "");
+    // Convert phone number to WhatsApp format (+989xxxxxxxxx)
+    const normalizedPhone = toWhatsAppFormat(recipient.phone);
 
     let customerId: number;
     let leadId: number | null = null;

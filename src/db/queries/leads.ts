@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { leadsTable, productsTable } from "@/db/schema";
 import { eq, like, or, desc, asc, sql, inArray } from "drizzle-orm";
 import type { Lead, NewLead } from "@/db/schema";
+import { normalizePhoneNumber } from "../../lib/phone-utils";
 
 // Get all leads with optional pagination and search
 export async function getLeads({
@@ -21,10 +22,11 @@ export async function getLeads({
 
   let whereClause = undefined;
   if (search) {
+    const normalizedSearch = normalizePhoneNumber(search);
     whereClause = or(
       like(leadsTable.firstName, `%${search}%`),
       like(leadsTable.lastName, `%${search}%`),
-      like(leadsTable.phone, `%${search}%`)
+      like(leadsTable.phone, `%${normalizedSearch}%`)
     );
   }
 

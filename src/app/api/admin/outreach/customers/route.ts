@@ -3,6 +3,8 @@ import { getCustomers, createCustomer } from "@/db/queries/customers";
 import { db } from "@/db";
 import { leadsTable, customersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { normalizePhoneNumber } from "@/lib/phone-utils";
+import { validatePhoneNumber } from "@/lib/phone-validation";
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,17 +37,24 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Normalize and validate phone number
+    const normalizedPhone = normalizePhoneNumber(body.phone);
+    const validation = validatePhoneNumber(normalizedPhone);
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
+
     // Check if phone number already exists in leads or customers
     const existingLead = await db
       .select()
       .from(leadsTable)
-      .where(eq(leadsTable.phone, body.phone))
+      .where(eq(leadsTable.phone, normalizedPhone))
       .limit(1);
 
     const existingCustomer = await db
       .select()
       .from(customersTable)
-      .where(eq(customersTable.phone, body.phone))
+      .where(eq(customersTable.phone, normalizedPhone))
       .limit(1);
 
     if (existingLead.length > 0 || existingCustomer.length > 0) {
@@ -55,7 +64,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const customer = await createCustomer(body);
+    const customer = await createCustomer({ ...body, phone: normalizedPhone });
     return NextResponse.json(customer, { status: 201 });
   } catch (error) {
     console.error("Error creating customer:", error);

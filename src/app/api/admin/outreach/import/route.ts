@@ -3,39 +3,10 @@ import { read, utils } from "xlsx";
 import { db } from "@/db";
 import { leadsTable, productsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
-function normalizePhone(phone: string | number): string {
-  // Convert to string if number
-  let normalized = String(phone).replace(/[\s\-\(\)]/g, "");
-
-  // If already international format, return as is
-  if (normalized.startsWith("+98")) {
-    return normalized;
-  }
-
-  // If starts with 98, add +
-  if (normalized.startsWith("98")) {
-    return "+" + normalized;
-  }
-
-  // If starts with 0, replace with +98
-  if (normalized.startsWith("0")) {
-    return "+98" + normalized.slice(1);
-  }
-
-  // If starts with 9, assume it's 9xxxxxxxxx, add +98
-  if (normalized.startsWith("9") && normalized.length === 10) {
-    return "+98" + normalized;
-  }
-
-  // Otherwise, try to add +98 if it looks like a mobile number
-  if (/^9\d{9}$/.test(normalized)) {
-    return "+98" + normalized;
-  }
-
-  // Return as is if doesn't match patterns
-  return normalized;
-}
+import {
+  normalizePhoneNumber,
+  validatePhoneNumber,
+} from "../../../lib/phone-validation";
 
 function mapColumns(row: any): {
   firstName: string;
@@ -168,9 +139,17 @@ export async function PUT(request: NextRequest) {
     for (const lead of leads) {
       try {
         const mappedLead = mapColumns(lead);
-        const normalizedPhone = normalizePhone(mappedLead.phone);
-        if (!normalizedPhone || !mappedLead.firstName || !mappedLead.lastName) {
-          errors.push({ lead, error: "Missing required fields" });
+        const normalizedPhone = normalizePhoneNumber(mappedLead.phone);
+        const validation = validatePhoneNumber(normalizedPhone);
+        if (
+          !validation.success ||
+          !mappedLead.firstName ||
+          !mappedLead.lastName
+        ) {
+          errors.push({
+            lead,
+            error: validation.error || "Missing required fields",
+          });
           continue;
         }
 
