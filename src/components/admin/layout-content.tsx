@@ -37,7 +37,9 @@ export default function AdminLayoutContent({
       </Sheet>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 overflow-auto pt-16 lg:pt-4">{children}</main>
+      <main className="flex-1 p-4 overflow-auto pt-16 lg:pt-4 bg-gray-50 shadow-sm">
+        {children}
+      </main>
     </div>
   );
 }
