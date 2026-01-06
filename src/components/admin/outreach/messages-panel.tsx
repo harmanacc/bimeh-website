@@ -97,8 +97,10 @@ export function MessagesPanel({ templates, recipients }: MessagesPanelProps) {
   const filteredRecipients = recipients.filter((recipient) => {
     const term = searchTerm.toLowerCase();
     return (
-      recipient.firstName.toLowerCase().includes(term) ||
-      recipient.lastName.toLowerCase().includes(term) ||
+      recipient.firstName?.toLowerCase().includes(term) ||
+      false ||
+      recipient.lastName?.toLowerCase().includes(term) ||
+      false ||
       recipient.phone.includes(term)
     );
   });

@@ -19,9 +19,9 @@ import type {
 export type CustomerRecipient = {
   id: number;
   leadId: number | null;
-  firstName: string;
-  lastName: string;
-  fullName?: string;
+  firstName: string | null;
+  lastName: string | null;
+  fullName: string | null;
   phone: string;
   insuranceType: string | null;
   preferredChannel: MessageChannel | null;
@@ -38,9 +38,9 @@ export type CustomerRecipient = {
 
 export type LeadRecipient = {
   id: number;
-  firstName: string;
-  lastName: string;
-  fullName?: string;
+  firstName: string | null;
+  lastName: string | null;
+  fullName: string | null;
   phone: string;
   productId: number | null;
   source: string | null;

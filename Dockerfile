@@ -1,7 +1,7 @@
 # Multi-stage build for BIM760 Next.js application
 
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -22,7 +22,7 @@ COPY . .
 RUN pnpm run build
 
 # Production stage
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -45,10 +45,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
-COPY --from=builder --chown=nextjs:nodejs /app/tailwind.config.ts ./
+# Tailwind CSS v4 doesn't require a separate config file
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/contentlayer.config.ts ./
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 
 # Switch to non-root user
 USER nextjs

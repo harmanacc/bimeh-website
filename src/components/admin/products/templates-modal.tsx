@@ -53,7 +53,7 @@ export default function TemplatesModal({
   const [formData, setFormData] = useState({
     name: "",
     templateText: "",
-    channel: "whatsapp" as const,
+    channel: "whatsapp",
     isDefault: false,
   });
 
@@ -98,7 +98,7 @@ export default function TemplatesModal({
     setFormData({
       name: template.name,
       templateText: template.templateText,
-      channel: template.channel as any,
+      channel: template.channel,
       isDefault: template.isDefault || false,
     });
     setIsFormOpen(true);
@@ -273,7 +273,7 @@ export default function TemplatesModal({
                       <Select
                         value={formData.channel}
                         onValueChange={(value) =>
-                          setFormData({ ...formData, channel: value as any })
+                          setFormData({ ...formData, channel: value })
                         }
                       >
                         <SelectTrigger>

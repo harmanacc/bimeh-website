@@ -85,7 +85,7 @@ export default function UploadLeadsPage() {
         setSource(""); // Clear source after successful upload
       } else {
         const errorMessages = [
-          ...new Set(data.errorDetails.map((e: any) => e.error)),
+          ...new Set(data.errorDetails.map((e: { error: string }) => e.error)),
         ];
         const errorText = errorMessages.join(", ");
         toast.error(`هیچ لیدی اضافه نشد. خطا: ${errorText}`);

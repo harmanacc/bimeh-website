@@ -14,8 +14,13 @@ async function createDatabase() {
     await client.connect();
     await client.query(`CREATE DATABASE "${dbName}"`);
     console.log(`Database ${dbName} created`);
-  } catch (error: any) {
-    if (error.code === "42P04") {
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "42P04"
+    ) {
       console.log(`Database ${dbName} already exists`);
     } else {
       throw error;
